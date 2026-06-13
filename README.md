@@ -4,6 +4,8 @@ A hands-on example for teaching Retrieval-Augmented Generation (RAG) built as a
 **LangGraph** graph, using **LangChain** components, **Voyage AI** embeddings,
 and **Claude** for generation.
 
+<img width="767" height="812" alt="image" src="https://github.com/user-attachments/assets/241ae288-6f73-44fe-9c99-ab852093bd59" />
+
 ## What's in this folder
 
 ```
