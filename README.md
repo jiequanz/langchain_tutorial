@@ -358,6 +358,48 @@ contextualize → retrieve → grade (relevant) → generate
   should suddenly become answerable.
 - **Inspect chunking:** in `build_retriever()`, temporarily `print(chunks)` after
   the splitter and discuss where chunk boundaries landed.
+- **Make the rewrite context-aware:** right now `rewrite` is *blind* — it only
+  sees the failed query, not the chunks that came back (it does **not** use
+  `state["documents"]`). Upgrade it so the rewrite can react to *what* was
+  retrieved. Two edits:
+
+  1. Add `{context}` to `rewrite_chain`'s prompt in `make_chains()`:
+
+```python
+rewrite_chain = (
+    ChatPromptTemplate.from_messages([
+        (
+            "system",
+            "The search query below did not retrieve useful documents. Look at "
+            "what WAS retrieved (CONTEXT) to see what went wrong, then rewrite "
+            "the query so it targets the missing information. Output ONLY the "
+            "query text.",
+        ),
+        ("human", "Question: {question}\nQuery that failed: {previous}\n\nCONTEXT:\n{context}"),
+    ])
+    | llm
+)
+```
+
+  2. Pass the retrieved chunks into the node in `rewrite`:
+
+```python
+def rewrite(state: ChatState) -> dict:
+    previous = state["question"]
+    context = "\n\n".join(state["documents"])
+    better = clean_llm_query(
+        rewrite_chain.invoke(
+            {"question": state["question"], "previous": previous, "context": context}
+        ).content
+    )
+    return {"question": better, "rewrite_from": previous}
+```
+
+  **Discuss:** blind reformulation just swaps synonyms; a context-aware rewrite
+  can say *"these chunks are about batteries in general, but the user wants
+  warranty terms — search for 'PowerCell warranty period'."* This is closer to
+  real corrective RAG. Re-run the Hauler battery warranty question and compare
+  the rewritten query in the trace.
 
 ## Where to go next
 
