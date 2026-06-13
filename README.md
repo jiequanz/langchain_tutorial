@@ -11,6 +11,9 @@ and **Claude** for generation.
 ```
 langchain_tutorial/
 ├── app.py                # Streamlit chat UI + corrective RAG graph
+├── interview_prep.py     # Interview Prep Studio (glossary, labs, quiz, mock interview)
+├── glossary.py           # bilingual concept data (EN + 中文) for the studio
+├── knowledge.md          # source notes the glossary is built from
 ├── docs/                 # the knowledge base — 6 short documents
 │   ├── 01_company.txt
 │   ├── 02_products.txt
@@ -22,6 +25,28 @@ langchain_tutorial/
 ├── handout.html          # one-page slide-ready reference
 └── README.md             # this file
 ```
+
+## Two apps in this repo
+
+| App | Run | What it is |
+|---|---|---|
+| **Corrective RAG demo** | `streamlit run app.py` | The single-purpose RAG chatbot with the live agent trace (the rest of this README). |
+| **Interview Prep Studio** | `streamlit run interview_prep.py` | A study tool for **Agent / LangChain / LangGraph / RAG** interviews: a bilingual glossary, interactive labs, flashcards, a quiz, and an LLM-graded mock interview. It reuses `app.py`'s graph for its Corrective RAG lab. |
+
+### Interview Prep Studio at a glance
+
+Tabs:
+
+- **Glossary** — 46 concepts across 5 categories, each with a plain-English analogy and a 中文 explanation (toggle language in the sidebar).
+- **Flashcards / Quiz** — active recall, no API calls.
+- **Embeddings 🔒** — type a query + candidates, see them ranked by cosine similarity (Voyage).
+- **Chunking** — drag size/overlap sliders and watch chunk boundaries move (no API key needed).
+- **Corrective RAG 🔒** — the `app.py` graph with its live trace.
+- **Agent 🔒** — a tool-using ReAct loop you can watch reason → act → observe.
+- **Temperature 🔒** — the same prompt at three temperatures, side by side.
+- **Mock Interview 🔒** — Claude asks, you answer, Claude grades you 1–5 (LLM-as-judge).
+
+🔒 = needs an API key; these are gated behind a button so you never spend money by accident. Free tabs work with no keys.
 
 The documents describe a fictional electric-bike company, *Helios Bikes*. They
 are deliberately written so that facts are **spread across documents**, which is

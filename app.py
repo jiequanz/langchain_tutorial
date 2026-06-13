@@ -37,7 +37,7 @@ from langgraph.graph.message import add_messages
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-CHAT_MODEL = "claude-sonnet-4-6"
+CHAT_MODEL = "claude-opus-4-8"
 EMBED_MODEL = "voyage-3-large"
 CHUNK_SIZE = 600
 CHUNK_OVERLAP = 100
@@ -107,7 +107,7 @@ def build_retriever():
 # LLM chains
 # ===========================================================================
 def make_chains():
-    llm = ChatAnthropic(model=CHAT_MODEL, temperature=0)
+    llm = ChatAnthropic(model=CHAT_MODEL)
 
     contextualize_chain = (
         ChatPromptTemplate.from_messages([

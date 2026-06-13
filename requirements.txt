@@ -3,3 +3,5 @@ langchain-anthropic
 langchain-voyageai
 langgraph
 streamlit
+numpy
+pandas

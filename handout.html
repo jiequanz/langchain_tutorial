@@ -111,7 +111,7 @@
   <div class="grid">
     <div>
       <div class="panel-title">The Graph</div>
-      <svg viewBox="0 0 460 472" xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono', monospace">
+      <svg viewBox="0 0 460 534" xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono', monospace">
         <defs>
           <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 z" fill="#182234"/>
@@ -125,57 +125,66 @@
         </defs>
 
         <!-- edges -->
+        <!-- START -> contextualize -->
         <line x1="230" y1="50" x2="230" y2="84" stroke="#182234" stroke-width="1.6" marker-end="url(#ar)"/>
-        <line x1="230" y1="134" x2="230" y2="170" stroke="#182234" stroke-width="1.6" marker-end="url(#ar)"/>
+        <!-- contextualize -> retrieve -->
+        <line x1="230" y1="134" x2="230" y2="146" stroke="#182234" stroke-width="1.6" marker-end="url(#ar)"/>
+        <!-- retrieve -> grade -->
+        <line x1="230" y1="196" x2="230" y2="232" stroke="#182234" stroke-width="1.6" marker-end="url(#ar)"/>
         <!-- grade -> generate (yes) -->
-        <line x1="230" y1="220" x2="230" y2="276" stroke="#1f8a76" stroke-width="2" marker-end="url(#arT)"/>
-        <text x="238" y="252" font-size="10" fill="#1f8a76" font-weight="700">yes</text>
+        <line x1="230" y1="282" x2="230" y2="338" stroke="#1f8a76" stroke-width="2" marker-end="url(#arT)"/>
+        <text x="238" y="314" font-size="10" fill="#1f8a76" font-weight="700">yes</text>
         <!-- generate -> END -->
-        <line x1="230" y1="324" x2="230" y2="372" stroke="#1f8a76" stroke-width="2" marker-end="url(#arT)"/>
+        <line x1="230" y1="386" x2="230" y2="434" stroke="#1f8a76" stroke-width="2" marker-end="url(#arT)"/>
         <!-- grade -> rewrite (no, retry) -->
-        <line x1="312" y1="196" x2="336" y2="196" stroke="#ef5026" stroke-width="2" marker-end="url(#arC)"/>
+        <line x1="312" y1="258" x2="336" y2="258" stroke="#ef5026" stroke-width="2" marker-end="url(#arC)"/>
         <!-- rewrite -> retrieve  (THE LOOP) -->
-        <path d="M392,172 C 392,118 332,110 314,110" fill="none" stroke="#ef5026" stroke-width="2.4" stroke-dasharray="1 0" marker-end="url(#arC)"/>
-        <text x="330" y="150" font-size="9.5" fill="#ef5026" font-weight="700">loop back</text>
+        <path d="M392,234 C 392,178 334,172 314,172" fill="none" stroke="#ef5026" stroke-width="2.4" stroke-dasharray="1 0" marker-end="url(#arC)"/>
+        <text x="330" y="212" font-size="9.5" fill="#ef5026" font-weight="700">loop back</text>
         <!-- grade -> give_up (no, out of tries) -->
-        <path d="M148,196 C 96,196 86,232 86,276" fill="none" stroke="#9aa3b0" stroke-width="1.8" marker-end="url(#ar)"/>
-        <text x="2" y="240" font-size="9" fill="#5b6677">out of tries</text>
+        <path d="M148,258 C 96,258 86,294 86,338" fill="none" stroke="#9aa3b0" stroke-width="1.8" marker-end="url(#ar)"/>
+        <text x="2" y="302" font-size="9" fill="#5b6677">out of tries</text>
         <!-- give_up -> END -->
-        <path d="M86,324 C 86,372 150,392 188,392" fill="none" stroke="#9aa3b0" stroke-width="1.8" marker-end="url(#ar)"/>
+        <path d="M86,386 C 86,434 150,454 188,454" fill="none" stroke="#9aa3b0" stroke-width="1.8" marker-end="url(#ar)"/>
 
         <!-- nodes -->
         <!-- START -->
         <rect x="196" y="26" width="68" height="24" rx="12" fill="#182234"/>
         <text x="230" y="42" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">START</text>
 
-        <!-- retrieve -->
+        <!-- contextualize -->
         <rect x="150" y="86" width="160" height="48" rx="5" fill="#eef1f6" stroke="#182234" stroke-width="1.6"/>
-        <text x="230" y="106" text-anchor="middle" font-size="12.5" fill="#182234" font-weight="700">retrieve</text>
-        <text x="230" y="122" text-anchor="middle" font-size="9" fill="#5b6677">fetch top-k chunks</text>
+        <text x="230" y="106" text-anchor="middle" font-size="12" fill="#182234" font-weight="700">contextualize</text>
+        <text x="230" y="122" text-anchor="middle" font-size="8.5" fill="#5b6677">make follow-ups standalone</text>
+
+        <!-- retrieve -->
+        <rect x="150" y="148" width="160" height="48" rx="5" fill="#eef1f6" stroke="#182234" stroke-width="1.6"/>
+        <text x="230" y="168" text-anchor="middle" font-size="12.5" fill="#182234" font-weight="700">retrieve</text>
+        <text x="230" y="184" text-anchor="middle" font-size="9" fill="#5b6677">fetch top-k chunks</text>
 
         <!-- grade -->
-        <rect x="150" y="172" width="162" height="48" rx="5" fill="#eef1f6" stroke="#182234" stroke-width="1.6"/>
-        <text x="231" y="192" text-anchor="middle" font-size="12.5" fill="#182234" font-weight="700">grade</text>
-        <text x="231" y="208" text-anchor="middle" font-size="9" fill="#5b6677">relevant enough?</text>
+        <rect x="150" y="234" width="162" height="48" rx="5" fill="#eef1f6" stroke="#182234" stroke-width="1.6"/>
+        <text x="231" y="254" text-anchor="middle" font-size="12.5" fill="#182234" font-weight="700">grade</text>
+        <text x="231" y="270" text-anchor="middle" font-size="9" fill="#5b6677">relevant enough?</text>
 
         <!-- rewrite -->
-        <rect x="336" y="172" width="116" height="48" rx="5" fill="#fce9e2" stroke="#ef5026" stroke-width="1.8"/>
-        <text x="394" y="192" text-anchor="middle" font-size="12" fill="#ef5026" font-weight="700">rewrite</text>
-        <text x="394" y="208" text-anchor="middle" font-size="8.5" fill="#c2451f">improve the query</text>
+        <rect x="336" y="234" width="116" height="48" rx="5" fill="#fce9e2" stroke="#ef5026" stroke-width="1.8"/>
+        <text x="394" y="254" text-anchor="middle" font-size="12" fill="#ef5026" font-weight="700">rewrite</text>
+        <text x="394" y="270" text-anchor="middle" font-size="8.5" fill="#c2451f">improve the query</text>
 
         <!-- give_up -->
-        <rect x="20" y="276" width="132" height="48" rx="5" fill="#edeff2" stroke="#9aa3b0" stroke-width="1.6"/>
-        <text x="86" y="296" text-anchor="middle" font-size="12" fill="#5b6677" font-weight="700">give_up</text>
-        <text x="86" y="312" text-anchor="middle" font-size="8.5" fill="#8b94a2">fail gracefully</text>
+        <rect x="20" y="338" width="132" height="48" rx="5" fill="#edeff2" stroke="#9aa3b0" stroke-width="1.6"/>
+        <text x="86" y="358" text-anchor="middle" font-size="12" fill="#5b6677" font-weight="700">give_up</text>
+        <text x="86" y="374" text-anchor="middle" font-size="8.5" fill="#8b94a2">fail gracefully</text>
 
         <!-- generate -->
-        <rect x="154" y="276" width="152" height="48" rx="5" fill="#e4f2ee" stroke="#1f8a76" stroke-width="1.8"/>
-        <text x="230" y="296" text-anchor="middle" font-size="12.5" fill="#1f8a76" font-weight="700">generate</text>
-        <text x="230" y="312" text-anchor="middle" font-size="9" fill="#1a7867">answer from context</text>
+        <rect x="154" y="338" width="152" height="48" rx="5" fill="#e4f2ee" stroke="#1f8a76" stroke-width="1.8"/>
+        <text x="230" y="358" text-anchor="middle" font-size="12.5" fill="#1f8a76" font-weight="700">generate</text>
+        <text x="230" y="374" text-anchor="middle" font-size="9" fill="#1a7867">answer from context</text>
 
         <!-- END -->
-        <rect x="198" y="380" width="64" height="24" rx="12" fill="#182234"/>
-        <text x="230" y="396" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">END</text>
+        <rect x="198" y="442" width="64" height="24" rx="12" fill="#182234"/>
+        <text x="230" y="458" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">END</text>
       </svg>
     </div>
 
@@ -201,12 +210,12 @@
       <tbody>
         <tr>
           <td class="concept">State</td>
-          <td><code>class RAGState(TypedDict)</code></td>
+          <td><code>class ChatState(TypedDict)</code></td>
           <td class="meaning">A shared dict that every node reads from and writes updates to.</td>
         </tr>
         <tr>
           <td class="concept">Node</td>
-          <td><code>retrieve, grade, rewrite, generate, give_up</code></td>
+          <td><code>contextualize, retrieve, grade, rewrite, generate, give_up</code></td>
           <td class="meaning">A function: takes the state, returns the part of it to update.</td>
         </tr>
         <tr>
@@ -229,8 +238,8 @@
   </div>
 
   <div class="foot">
-    <span>Helios Bikes teaching example · corrective_rag.py</span>
-    <span>Render the live graph → render_graph.py</span>
+    <span>Helios Bikes teaching example · app.py</span>
+    <span>Render the live graph → app.get_graph().draw_mermaid()</span>
   </div>
 
 </div>
