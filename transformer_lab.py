@@ -85,7 +85,7 @@ def _run_toy_attention(tokens, d_model: int, d_k: int, seed: int, use_pos: bool,
     out = context @ Wo             # (n, d_model) — back to model width
     return {
         "X": X, "Q": Q, "K": K, "V": V,
-        "Wq": Wq, "Wk": Wk, "Wv": Wv,
+        "Wq": Wq, "Wk": Wk, "Wv": Wv, "Wo": Wo,
         "scores": scores, "weights": weights, "context": context, "out": out,
     }
 
@@ -472,13 +472,40 @@ def _tf_self_attention_lab() -> None:
         st.markdown(f"- **{wrow[j]*100:.0f}%** on **{tokens[j]}** (takes that much of {tokens[j]}'s Value)")
         st.progress(float(wrow[j]))
     top = tokens[int(order[0])]
-    st.success(f"So **'{tokens[qtok]}'** mostly listens to **'{top}'**. The output for "
-               f"'{tokens[qtok]}' is a blend of all the Values, weighted by these percentages.")
-    st.caption(
-        f"Output for '{tokens[qtok]}' = " +
-        " + ".join(f"{wrow[j]*100:.0f}%·V({tokens[j]})" for j in range(len(tokens))) +
-        f" = `{_vec_str(np.round(r['context'][qtok], 2))}`"
+    st.success(f"So **'{tokens[qtok]}'** mostly listens to **'{top}'**. Its output is a blend of "
+               "all the Values, weighted by these percentages:")
+
+    # Make the blend explicit and prominent.
+    blend_terms = " + ".join(rf"{wrow[j]*100:.0f}\%\cdot V_{{\text{{{tokens[j]}}}}}" for j in range(len(tokens)))
+    st.latex(
+        rf"\text{{blend}}_{{\text{{{tokens[qtok]}}}}} = {blend_terms} = {_brow(np.round(r['context'][qtok], 2))}"
     )
+    st.caption(f"This blend has dₖ = {r['context'].shape[1]} numbers (same width as V).")
+
+    # ---- Step 6b: project the blend back to model width (-> h) ----------
+    st.markdown("#### One more multiply → the token's final vector")
+    st.markdown(
+        "The blend is `dₖ` numbers wide. One last weight grid **W_O** maps it back to the "
+        f"model's width **d_model = {d_model}**. That result is the token's **output vector** — "
+        "the thing passed to the next layer (and, for the last token, used to pick the next word)."
+    )
+    blend_vec = r["context"][qtok]
+    out_vec_final = r["out"][qtok]
+    st.latex(
+        rf"\underbrace{{{_brow(np.round(blend_vec, 2))}}}_{{\text{{blend}}\,(1\times{r['context'].shape[1]})}}"
+        rf"\;\times\;"
+        rf"\underbrace{{W_O}}_{{({r['context'].shape[1]}\times{d_model})}}"
+        rf"\;=\;"
+        rf"\underbrace{{{_brow(np.round(out_vec_final, 2))}}}_{{\text{{output of }}'{tokens[qtok]}'\,(1\times{d_model})}}"
+    )
+    with st.expander("Show W_O and one element of the multiply"):
+        st.dataframe(pd.DataFrame(np.round(r["Wo"], 2),
+                                  index=[f"b{i}" for i in range(r["context"].shape[1])],
+                                  columns=[f"o{j}" for j in range(d_model)]), use_container_width=True)
+        col0 = r["Wo"][:, 0]
+        terms0 = " + ".join(f"({blend_vec[i]:+.2f})({col0[i]:+.2f})" for i in range(len(blend_vec)))
+        st.latex(rf"o_0 = {terms0} = {float(np.dot(blend_vec, col0)):+.2f}")
+
     st.info(
         "Try the **seed** slider (different random weights = a different 'attention head' "
         "that cares about different things), or turn on positional encoding to see word "
@@ -491,9 +518,9 @@ def _tf_self_attention_lab() -> None:
     last = tokens[-1]
     h = r["out"][-1]
     st.markdown(
-        f"To predict the word *after* **'{last}'**, we take **'{last}'**'s output vector from "
-        f"Step 6 (run through a few more layers) — call it `h`. This one vector carries "
-        "everything the model knows so far:"
+        f"To predict the word *after* **'{last}'**, we use **'{last}'**'s output vector from the "
+        f"step above — the `blend × W_O` result for the **last** word (in a real model, after "
+        f"more layers). Call it `h`:"
     )
     st.latex(rf"h_{{\text{{{last}}}}} = {_brow(np.round(h, 2))}")
 
