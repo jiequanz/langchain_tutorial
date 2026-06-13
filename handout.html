@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corrective RAG — LangGraph Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eef1f5; --sheet:#ffffff;
+    --ink:#182234; --ink-soft:#5b6677; --line:#d7dde6;
+    --coral:#ef5026; --teal:#1f8a76;
+    --wash-navy:#eef1f6; --wash-teal:#e4f2ee; --wash-coral:#fce9e2; --wash-gray:#edeff2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);
+    line-height:1.45;
+    padding:28px 16px;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .sheet{
+    width:8.5in; max-width:100%; min-height:11in;
+    margin:0 auto; background:var(--sheet);
+    padding:0.55in 0.6in 0.45in;
+    box-shadow:0 18px 50px rgba(24,34,52,.16);
+  }
+
+  /* ---- Header ---- */
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:500;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--ink-soft);
+    display:flex; gap:10px; align-items:center;
+  }
+  .eyebrow::after{content:""; flex:1; height:1px; background:var(--line);}
+  h1{
+    font-family:'Fraunces',serif; font-weight:600; font-size:43px;
+    letter-spacing:-.01em; margin:9px 0 4px; line-height:1.02;
+  }
+  .lede{font-size:13px; color:var(--ink-soft); max-width:52ch;}
+  .lede b{color:var(--ink); font-weight:600;}
+
+  /* ---- Mid grid: diagram + side ---- */
+  .grid{display:grid; grid-template-columns:1.15fr 1fr; gap:26px; margin-top:22px;}
+  .panel-title{
+    font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  svg{width:100%; height:auto; display:block;}
+
+  /* ---- Legend ---- */
+  .legend{display:flex; flex-direction:column; gap:11px; margin-top:6px;}
+  .leg{display:flex; gap:10px; align-items:flex-start; font-size:12px;}
+  .swatch{width:26px; height:0; border-top-width:3px; border-top-style:solid; margin-top:8px; flex:none;}
+  .leg b{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px;}
+  .leg .desc{color:var(--ink-soft);}
+
+  .callout{
+    margin-top:18px; border:1.5px solid var(--ink); border-radius:3px;
+    padding:13px 15px; background:#fff;
+  }
+  .callout h3{
+    font-family:'Fraunces',serif; font-weight:600; font-size:16px; margin-bottom:5px;
+  }
+  .callout p{font-size:12px; color:var(--ink-soft);}
+  .callout .chain{font-family:'JetBrains Mono',monospace; color:var(--ink); font-size:11px;}
+  .callout .loop{color:var(--coral); font-weight:600;}
+
+  /* ---- Concept table ---- */
+  .table-wrap{margin-top:24px;}
+  table{width:100%; border-collapse:collapse; font-size:12px;}
+  thead th{
+    text-align:left; font-family:'JetBrains Mono',monospace; font-weight:700;
+    font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-soft); padding:0 10px 7px; border-bottom:1.5px solid var(--ink);
+  }
+  tbody td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  .concept{font-family:'Fraunces',serif; font-weight:600; font-size:14px; white-space:nowrap;}
+  td code{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink); background:var(--wash-navy); padding:1.5px 5px; border-radius:3px;}
+  .meaning{color:var(--ink-soft);}
+  .cycle-row td{background:var(--wash-coral);}
+  .cycle-row code{background:#f7d6c9;}
+  .cycle-row .concept{color:var(--coral);}
+
+  .foot{
+    margin-top:18px; padding-top:10px; border-top:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.04em;
+    color:var(--ink-soft); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  @media print{
+    body{background:#fff; padding:0;}
+    .sheet{box-shadow:none; width:auto; min-height:auto; padding:0.4in 0.5in;}
+  }
+  @media (max-width:720px){ .grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="eyebrow">LangGraph · Teaching Reference · RAG</div>
+  <h1>Corrective&nbsp;RAG</h1>
+  <p class="lede">A RAG system built as a <b>graph</b>, not a straight line. It retrieves documents, checks whether they actually answer the question, and — if not — <b>rewrites the query and tries again</b>. That loop is what a chain cannot do.</p>
+
+  <div class="grid">
+    <div>
+      <div class="panel-title">The Graph</div>
+      <svg viewBox="0 0 460 472" xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono', monospace">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#182234"/>
+          </marker>
+          <marker id="arC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ef5026"/>
+          </marker>
+          <marker id="arT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#1f8a76"/>
+          </marker>
+        </defs>
+
+        <!-- edges -->
+        <line x1="230" y1="50" x2="230" y2="84" stroke="#182234" stroke-width="1.6" marker-end="url(#ar)"/>
+        <line x1="230" y1="134" x2="230" y2="170" stroke="#182234" stroke-width="1.6" marker-end="url(#ar)"/>
+        <!-- grade -> generate (yes) -->
+        <line x1="230" y1="220" x2="230" y2="276" stroke="#1f8a76" stroke-width="2" marker-end="url(#arT)"/>
+        <text x="238" y="252" font-size="10" fill="#1f8a76" font-weight="700">yes</text>
+        <!-- generate -> END -->
+        <line x1="230" y1="324" x2="230" y2="372" stroke="#1f8a76" stroke-width="2" marker-end="url(#arT)"/>
+        <!-- grade -> rewrite (no, retry) -->
+        <line x1="312" y1="196" x2="336" y2="196" stroke="#ef5026" stroke-width="2" marker-end="url(#arC)"/>
+        <!-- rewrite -> retrieve  (THE LOOP) -->
+        <path d="M392,172 C 392,118 332,110 314,110" fill="none" stroke="#ef5026" stroke-width="2.4" stroke-dasharray="1 0" marker-end="url(#arC)"/>
+        <text x="330" y="150" font-size="9.5" fill="#ef5026" font-weight="700">loop back</text>
+        <!-- grade -> give_up (no, out of tries) -->
+        <path d="M148,196 C 96,196 86,232 86,276" fill="none" stroke="#9aa3b0" stroke-width="1.8" marker-end="url(#ar)"/>
+        <text x="2" y="240" font-size="9" fill="#5b6677">out of tries</text>
+        <!-- give_up -> END -->
+        <path d="M86,324 C 86,372 150,392 188,392" fill="none" stroke="#9aa3b0" stroke-width="1.8" marker-end="url(#ar)"/>
+
+        <!-- nodes -->
+        <!-- START -->
+        <rect x="196" y="26" width="68" height="24" rx="12" fill="#182234"/>
+        <text x="230" y="42" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">START</text>
+
+        <!-- retrieve -->
+        <rect x="150" y="86" width="160" height="48" rx="5" fill="#eef1f6" stroke="#182234" stroke-width="1.6"/>
+        <text x="230" y="106" text-anchor="middle" font-size="12.5" fill="#182234" font-weight="700">retrieve</text>
+        <text x="230" y="122" text-anchor="middle" font-size="9" fill="#5b6677">fetch top-k chunks</text>
+
+        <!-- grade -->
+        <rect x="150" y="172" width="162" height="48" rx="5" fill="#eef1f6" stroke="#182234" stroke-width="1.6"/>
+        <text x="231" y="192" text-anchor="middle" font-size="12.5" fill="#182234" font-weight="700">grade</text>
+        <text x="231" y="208" text-anchor="middle" font-size="9" fill="#5b6677">relevant enough?</text>
+
+        <!-- rewrite -->
+        <rect x="336" y="172" width="116" height="48" rx="5" fill="#fce9e2" stroke="#ef5026" stroke-width="1.8"/>
+        <text x="394" y="192" text-anchor="middle" font-size="12" fill="#ef5026" font-weight="700">rewrite</text>
+        <text x="394" y="208" text-anchor="middle" font-size="8.5" fill="#c2451f">improve the query</text>
+
+        <!-- give_up -->
+        <rect x="20" y="276" width="132" height="48" rx="5" fill="#edeff2" stroke="#9aa3b0" stroke-width="1.6"/>
+        <text x="86" y="296" text-anchor="middle" font-size="12" fill="#5b6677" font-weight="700">give_up</text>
+        <text x="86" y="312" text-anchor="middle" font-size="8.5" fill="#8b94a2">fail gracefully</text>
+
+        <!-- generate -->
+        <rect x="154" y="276" width="152" height="48" rx="5" fill="#e4f2ee" stroke="#1f8a76" stroke-width="1.8"/>
+        <text x="230" y="296" text-anchor="middle" font-size="12.5" fill="#1f8a76" font-weight="700">generate</text>
+        <text x="230" y="312" text-anchor="middle" font-size="9" fill="#1a7867">answer from context</text>
+
+        <!-- END -->
+        <rect x="198" y="380" width="64" height="24" rx="12" fill="#182234"/>
+        <text x="230" y="396" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">END</text>
+      </svg>
+    </div>
+
+    <div>
+      <div class="panel-title">The three exits from grade</div>
+      <div class="legend">
+        <div class="leg"><span class="swatch" style="border-color:#1f8a76"></span><div><b>relevant → generate</b><div class="desc">Docs answer the question. Claude writes the answer and the graph ends.</div></div></div>
+        <div class="leg"><span class="swatch" style="border-color:#ef5026"></span><div><b>not relevant → rewrite</b><div class="desc">Docs miss. Rephrase the query and loop back to retrieve. Tries left.</div></div></div>
+        <div class="leg"><span class="swatch" style="border-color:#9aa3b0"></span><div><b>out of tries → give_up</b><div class="desc">Retrieval keeps failing. Say so honestly instead of inventing an answer.</div></div></div>
+      </div>
+
+      <div class="callout">
+        <h3>Why a graph, not a chain?</h3>
+        <p>A chain is a straight line: <span class="chain">retrieve → answer</span>. It can't react when retrieval misses. A graph adds the one move a line can't make — <span class="loop">a cycle back to retrieve</span> — so it self-corrects until it has good context or gives up.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="panel-title">Five LangGraph concepts → where they live in the code</div>
+    <table>
+      <thead><tr><th style="width:21%">Concept</th><th style="width:40%">In the code</th><th>What it is</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="concept">State</td>
+          <td><code>class RAGState(TypedDict)</code></td>
+          <td class="meaning">A shared dict that every node reads from and writes updates to.</td>
+        </tr>
+        <tr>
+          <td class="concept">Node</td>
+          <td><code>retrieve, grade, rewrite, generate, give_up</code></td>
+          <td class="meaning">A function: takes the state, returns the part of it to update.</td>
+        </tr>
+        <tr>
+          <td class="concept">Edge</td>
+          <td><code>add_edge("retrieve", "grade")</code></td>
+          <td class="meaning">A fixed transition — “after this node, always go there.”</td>
+        </tr>
+        <tr>
+          <td class="concept">Conditional edge</td>
+          <td><code>add_conditional_edges("grade", decide_next, …)</code></td>
+          <td class="meaning">A function picks the next node based on the current state.</td>
+        </tr>
+        <tr class="cycle-row">
+          <td class="concept">Cycle</td>
+          <td><code>add_edge("rewrite", "retrieve")</code></td>
+          <td class="meaning">Loops back to try again — the move a linear chain can’t express.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    <span>Helios Bikes teaching example · corrective_rag.py</span>
+    <span>Render the live graph → render_graph.py</span>
+  </div>
+
+</div>
+</body>
+</html>
