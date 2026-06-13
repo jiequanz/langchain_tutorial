@@ -1,0 +1,26 @@
+HELIOS BIKES — PRODUCT CATALOG
+
+Helios offers three electric bike models. All three use the same Helios PowerCell
+battery and the same charger, but they differ in frame, range, and purpose.
+
+THE DART (Commuter)
+The Dart is our lightweight city commuter, weighing 38 pounds. It has a range
+of up to 40 miles per charge and a top assisted speed of 20 mph. It is designed
+for flat-to-moderate terrain and daily commuting. Price: $1,800.
+
+THE TRAILBLAZER (Mountain)
+The Trailblazer is built for off-road and hilly terrain. It has wider tires,
+front suspension, and a more powerful motor. Its range is up to 35 miles per
+charge, with a top assisted speed of 20 mph. It weighs 52 pounds. Price: $2,600.
+
+THE HAULER (Cargo)
+The Hauler is our cargo bike, designed to carry up to 150 pounds of cargo plus
+the rider. It has an extended rear rack and a reinforced frame. Its range is up
+to 30 miles per charge because of the heavier load. It weighs 68 pounds.
+Price: $3,200.
+
+BATTERY PLATFORM
+Every model ships with the same removable Helios PowerCell battery, rated at
+500 watt-hours. A full charge takes about 4 hours. Because the battery is shared
+across all models, a replacement battery fits any Helios bike. Battery care and
+charging guidance are covered in a separate maintenance guide.

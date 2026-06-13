@@ -1,0 +1,27 @@
+HELIOS BIKES — BATTERY CARE GUIDE
+
+The Helios PowerCell battery is shared across all Helios models. Following these
+guidelines keeps it healthy and keeps your warranty valid.
+
+CHARGING
+Use only the charger supplied with your bike. A full charge takes about 4 hours.
+You do not need to fully drain the battery before recharging; lithium batteries
+last longer with partial, frequent charges than with deep discharges. Avoid
+leaving the battery on the charger continuously for more than 24 hours.
+
+TEMPERATURE
+Charge and store the battery at room temperature when possible. Do not charge
+the battery below freezing (32 F) or above 110 F. Charging a cold battery can
+cause permanent capacity loss.
+
+WINTER STORAGE
+If you will not ride for a month or more, remove the battery and store it
+indoors at roughly 50 percent charge. Check it every few weeks and top it back
+up to 50 percent if it drifts low. Do not store a fully empty battery, as it can
+fall into a deep-discharge state that the charger cannot recover.
+
+LIFESPAN
+Under normal use, the PowerCell retains at least 70 percent of its capacity for
+about 800 charge cycles, which is roughly three to five years for most riders.
+A battery that drops below 70 percent within the 2-year warranty window may be
+eligible for a warranty replacement.
